@@ -1,10 +1,10 @@
-import './App.css';
-import CommentList from './features/comments/CommentList';
+import "./App.css";
+import CommentList from "./features/comments/CommentList";
 
 function App() {
   return (
     <div className="App">
-      <CommentList/>
+      <CommentList />
     </div>
   );
 }

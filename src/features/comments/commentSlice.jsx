@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import notify from "react-hot-toast";
 
 const API = "https://jsonplaceholder.typicode.com/comments";
 
@@ -9,30 +10,32 @@ const initialState = {
 };
 
 export const fetchComments = createAsyncThunk(
-  'comments/fetchComment',
+  "comments/fetchComments",
   async () => {
     const response = await axios.get(API);
     return response.data;
   }
 );
 
-const commentSlice = createSlice({
+const CommentSlice = createSlice({
   name: "comments",
   initialState,
   reducers: {},
   extraReducers(builder) {
-    builder.addCase(fetchComments.fulfilled, (state, action) => {
-      state.entities.push(...action.payload);
-      state.loading = false;
-    });
-    builder.addCase(fetchComments.pending, (state, action) => {
-      state.loading = true;
-    });
-    builder.addCase(fetchComments.rejected, (state, action) => {
-      state.loading = false;
-      alert("Kesalahan dari sisi user");
-    });
+    builder
+      .addCase(fetchComments.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchComments.fulfilled, (state, { payload }) => {
+        state.entities = payload;
+        state.loading = false;
+        notify.success("Get Comment Success!");
+      })
+      .addCase(fetchComments.rejected, (state, action) => {
+        state.loading = false;
+        notify.error("Get Comment Failed!");
+      });
   },
 });
 
-export default commentSlice.reducer;
+export default CommentSlice.reducer;
